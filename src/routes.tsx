@@ -18,6 +18,7 @@ import GroupsPage from "./pages/GroupsPage";
 import NotesPage from "./pages/NotesPage";
 import ReviewPage from "./pages/ReviewPage";
 import FilteredParfumNotes from "./pages/FilteredParfumNotes";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -92,19 +93,25 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    Component: AdminDashboardPage,
-  },
-  {
-    path: "/admin/perfumes",
-    Component: AdminPerfumesPage,
-  },
-  {
-    path: "/admin/perfumes/:id",
-    Component: AdminPerfumeFormPage,
-  },
-  {
-    path: "/admin/permissoes",
-    Component: AdminPermissionsPage,
+    element: <ProtectedRoute adminOnly={true} />,
+    children: [
+      {
+        path: "",
+        Component: AdminDashboardPage,
+      },
+      {
+        path: "perfumes",
+        Component: AdminPerfumesPage,
+      },
+      {
+        path: "perfumes/:id",
+        Component: AdminPerfumeFormPage,
+      },
+      {
+        path: "permissoes",
+        Component: AdminPermissionsPage,
+      },
+    ]
   },
   {
     path: "*",

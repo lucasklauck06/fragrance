@@ -1,8 +1,15 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-import { users, type User } from '../data/mockData';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+}
 
 interface AuthContextType {
   currentUser: User | null;
+  token: string | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signup: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
@@ -11,65 +18,79 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const API_URL = 'http://localhost:3000/api';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('currentUser');
     return saved ? JSON.parse(saved) : null;
   });
 
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem('token') || null;
+  });
+
   const login = async (email: string, password: string) => {
-    // Validação de formato de email
-    if (!email.includes('@') || !email.includes('.')) {
-      return { success: false, error: 'E-mail deve ter formato válido' };
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { success: false, error: data.error || 'Erro ao fazer login' };
+      }
+
+      setCurrentUser(data.user);
+      setToken(data.token);
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro de conexão com o servidor' };
     }
-
-    // Simulação de API - aceita qualquer senha para usuários existentes
-    const user = users.find(u => u.email === email);
-
-    if (!user) {
-      return { success: false, error: 'Credenciais inválidas. Tente novamente.' };
-    }
-
-    setCurrentUser(user);
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    return { success: true };
   };
 
   const signup = async (name: string, email: string, password: string) => {
-    // Validação de formato de email
-    if (!email.includes('@') || !email.includes('.')) {
-      return { success: false, error: 'E-mail deve ter formato válido' };
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { success: false, error: data.error || 'Erro ao cadastrar' };
+      }
+
+      setCurrentUser(data.user);
+      setToken(data.token);
+      localStorage.setItem('currentUser', JSON.stringify(data.user));
+      localStorage.setItem('token', data.token);
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: 'Erro de conexão com o servidor' };
     }
-
-    // Verifica se email já existe
-    if (users.find(u => u.email === email)) {
-      return { success: false, error: 'E-mail já cadastrado' };
-    }
-
-    // Cria novo usuário
-    const newUser: User = {
-      id: String(users.length + 1),
-      name,
-      email,
-      role: 'USER',
-      createdAt: new Date().toISOString().split('T')[0],
-    };
-
-    users.push(newUser);
-    setCurrentUser(newUser);
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
-    return { success: true };
   };
 
   const logout = () => {
     setCurrentUser(null);
+    setToken(null);
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
   };
 
   const isAdmin = () => currentUser?.role === 'ADMIN';
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, signup, logout, isAdmin }}>
+    <AuthContext.Provider value={{ currentUser, token, login, signup, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

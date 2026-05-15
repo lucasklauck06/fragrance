@@ -1,0 +1,24 @@
+@import "./fonts.css";
+@import "./tailwind.css";
+@import "./theme.css";
+
+/* Cursor pointer em todos os botões por padrão */
+button {
+  cursor: pointer;
+}
+
+/* Checkboxes com cores customizadas por ID */
+[id="masculino"][data-state="checked"] {
+  background-color: rgb(59, 130, 246) !important; /* blue-500 */
+  border-color: rgb(59, 130, 246) !important;
+}
+
+[id="feminino"][data-state="checked"] {
+  background-color: rgb(236, 72, 153) !important; /* pink-500 */
+  border-color: rgb(236, 72, 153) !important;
+}
+
+[id="unissex"][data-state="checked"] {
+  background-color: rgb(20, 184, 166) !important; /* teal-500 */
+  border-color: rgb(20, 184, 166) !important;
+}

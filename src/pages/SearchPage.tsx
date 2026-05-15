@@ -148,7 +148,7 @@ export default function SearchPage() {
                         toggleGender("masculino", checked)
                       }
                     />
-                    <Label htmlFor="masculino">Masculino</Label>
+                    <Label className="cursor-pointer" htmlFor="masculino">Masculino</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -159,7 +159,7 @@ export default function SearchPage() {
                         toggleGender("feminino", checked)
                       }
                     />
-                    <Label htmlFor="feminino">Feminino</Label>
+                    <Label className="cursor-pointer" htmlFor="feminino">Feminino</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Checkbox
@@ -170,7 +170,7 @@ export default function SearchPage() {
                         toggleGender("unissex", checked)
                       }
                     />
-                    <Label htmlFor="unissex">Unissex</Label>
+                    <Label className="cursor-pointer" htmlFor="unissex">Unissex</Label>
                   </div>
                 </div>
               </Card>
@@ -230,14 +230,14 @@ export default function SearchPage() {
                           {perfumes.some(
                             (perfume) => perfume.brand === brand.name,
                           ) && (
-                            <span className="text-sm text-gray-500">
-                              {
-                                perfumes.filter(
-                                  (perfume) => perfume.brand === brand.name,
-                                ).length
-                              }
-                            </span>
-                          )}
+                              <span className="text-sm text-gray-500">
+                                {
+                                  perfumes.filter(
+                                    (perfume) => perfume.brand === brand.name,
+                                  ).length
+                                }
+                              </span>
+                            )}
                         </div>
                       ))}
                     </div>
@@ -388,13 +388,13 @@ export default function SearchPage() {
                           className="w-36 h-48 object-cover mix-blend-multiply rounded-lg"
                         />
                         <div className="flex flex-col flex-1 justify-between">
-                        <div>
-                          <div className="flex justify-between w-full">
-                            <p>{perfume.name}</p>
-                            <p>{perfume.year}</p>
+                          <div>
+                            <div className="flex justify-between w-full">
+                              <p>{perfume.name}</p>
+                              <p>{perfume.year}</p>
+                            </div>
+                            <p>{perfume.brand}</p>
                           </div>
-                          <p>{perfume.brand}</p>
-                        </div>
                           <div
                             className={`${perfume.gender === "Masculino" ? "text-blue-700 bg-gradient-to-r from-blue-300 to-transparent" : perfume.gender === "Feminino" ? "text-pink-700 bg-gradient-to-r from-pink-300 to-transparent" : "text-teal-700 bg-gradient-to-r from-teal-300 to-transparent"} rounded-full px-2 py-1 text-xs w-full mt-1 self-start`}
                           >
@@ -413,7 +413,8 @@ export default function SearchPage() {
                     </div>
                   ) : (
                     filteredPerfumes.map((perfume) => (
-                      <Card key={perfume.id} className="p-4 border overflow-hidden relative group border-gray-300 hover:border-teal-400 hover:bg-gray-100 transition-colors duration-300 cursor-pointer" onClick={() => navigate(`/perfume/${perfume.id}`)}>
+                      <Card key={perfume.id} className="p-4 border overflow-hidden relative group border-gray-300 hover:border-teal-400 hover:bg-gray-100 transition-colors duration-300 cursor-pointer"
+                        onClick={() => navigate(`/perfume/${perfume.id}`)}>
                         <div className="w-full h-40 relative rounded-lg overflow-hidden flex items-center justify-center p-2 ">
                           <img
                             src={perfume.image}

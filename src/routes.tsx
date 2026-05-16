@@ -3,7 +3,7 @@ import DefaultLayout from "./components/DefaultLayout";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import PerfumeDetailPage from "./pages/PerfumeDetailPage";
-import PerfumistHomePage from "./pages/DesignersHomePage";
+import DesignersHomePage from "./pages/DesignersHomePage";
 import PerfumistPage from "./pages/PerfumistPage";
 import SearchPage from "./pages/SearchPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/perfumistas",
-        Component: PerfumistHomePage,
+        Component: DesignersHomePage,
       },
       {
         path: "/busca",
